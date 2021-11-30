@@ -1,0 +1,2 @@
+id, name, email, password, number, loyalty_points, bank_account_number, shipping_address, billing-address, placed_order_ids, received_order_ids
+0, stanboy, man101@mail.com, 4843839302, 0,,,,,,

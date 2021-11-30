@@ -1,0 +1,6 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="videoco">
+    <output-path>$PROJECT_DIR$/out/artifacts/videoco</output-path>
+    <root id="archive" name="videoco.jar" />
+  </artifact>
+</component>

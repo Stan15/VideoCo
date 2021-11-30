@@ -1,0 +1,12 @@
+.button {
+    background-color: dodgerblue;
+    height: 10px;
+}
+
+.error-msg-visible.label {
+    -fx-text-fill: red;
+}
+
+.error-msg-hidden {
+    visibility: hidden;
+}
