@@ -13,54 +13,35 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.videoco.controllers.users.UserController;
 import org.videoco.models.users.UserModel;
-import org.videoco.views.ViewType;
+import org.videoco.views.ViewController;
+import org.videoco.views.ViewEnum;
 
 import java.io.IOException;
 import java.util.Objects;
 
-public class RegisterView {
-    @FXML TextField firstName;
-    @FXML TextField lastName;
+public class LoginVC extends ViewController {
     @FXML TextField email;
     @FXML PasswordField password;
-    @FXML PasswordField confirmPassword;
-    @FXML TextField employeeRegistrationCode;
-
     @FXML Label errorMsgLabel;
     @FXML Group errorMsgGroup;
 
     @FXML
-    public void switchToLoginScreen(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(ViewType.LOGIN.src)));
+    public void switchToRegisterScreen(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(ViewEnum.REGISTER.src)));
         Scene scene = new Scene(root);
 
         Stage stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
         stage.setScene(scene);
     }
 
-    @FXML
-    public void createAccount(ActionEvent event) {
-        String errorMsg = "";
-
-        String firstName = this.firstName.getText();
-        String lastName = this.lastName.getText();
-        if (firstName.isBlank()) {
-            errorMsg = "First name is missing.";
-        }
-        String name = firstName.strip() + " " + lastName.strip();
-
-        String password = this.password.getText().strip();
-        if (password.isBlank()) errorMsg = "Password missing.";
-
-        if (password.length()<8) errorMsg = "Use 8 characters or more for your password.";
-
-        if (!password.equals(this.confirmPassword.getText().strip())) {
-            errorMsg = "Those passwords didn't match. Try again.";
-        }
-
+    public void loginUser(ActionEvent event) {
         String email = this.email.getText().strip();
-        if (email.isBlank()) errorMsg = "Chose an email address.";
+        String password = this.password.getText().strip();
+
+        String errorMsg = "";
+        if (email.isBlank()) errorMsg = "Enter an email.";
         else if (!email.matches("[a-z][a-z0-9]*@[a-z]+\\.[a-z]+")) errorMsg = "Incorrect email format.";
+        else if (password.isBlank()) errorMsg = "Enter a password.";
 
         if (!errorMsg.isBlank()) {
             this.setError(errorMsg);
@@ -68,7 +49,7 @@ public class RegisterView {
         }
         this.clearError();
 
-        UserController.AuthPackage authPackage = UserController.registerUser(name, email, password, employeeRegistrationCode.getText());
+        UserController.AuthPackage authPackage = UserController.login(email, password);
         UserModel model = authPackage.getUserModel();
         if (model==null) {
             errorMsg = authPackage.getErrorMsg();

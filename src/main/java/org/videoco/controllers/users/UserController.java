@@ -1,17 +1,32 @@
 package org.videoco.controllers.users;
 
 import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 import org.videoco.controllers.admin.AdminController;
 import org.videoco.controllers.database.DatabaseController;
 import org.videoco.factories.UserFactory;
 import org.videoco.models.users.CustomerModel;
 import org.videoco.models.users.EmployeeModel;
 import org.videoco.models.users.UserModel;
-import org.videoco.views.ViewType;
+import org.videoco.views.ViewEnum;
+import org.videoco.views.sidebar.info.SidebarInfoItem;
+import org.videoco.views.sidebar.switcher.SidebarSwitcherItem;
+
+import java.util.List;
+import java.util.Objects;
 
 
 public abstract class UserController extends DatabaseController {
     private static UserModel currentUser;
+
+    public abstract void transitionToHomeView(ActionEvent event);
+    public abstract List<SidebarSwitcherItem> getSidebarSwitcherItems();
+    public abstract List<SidebarInfoItem> getSidebarInfoItems();
+
     public static AuthPackage registerUser(String name, String email, String password, String employeeRegistrationCode) {
         DatabaseController customerController = new CustomerController();
         DatabaseController employeeController = new EmployeeController();
@@ -21,18 +36,18 @@ public abstract class UserController extends DatabaseController {
 
         UserFactory userFactory = new UserFactory();
         UserModel user;
+        userFactory.setCommonAttrs(name, email, password);
+        employeeRegistrationCode = employeeRegistrationCode.strip();
         if (!employeeRegistrationCode.isBlank()) {
             if (!AdminController.isValidEmployeeRegistrationCode(employeeRegistrationCode))
                 return new AuthPackage(null, "Invalid employee registration code.");
 
             AdminController.useEmployeeRegisterCode(employeeRegistrationCode);
-            userFactory.setCommonAttrs(new EmployeeModel().getType(), name, getNewID(EmployeeController.GlobalIDFieldName), email, password);
-            user = userFactory.createModel();
-            employeeController.addModelToDB(user);
+            userFactory.setType(AdminController.getEmployeeType(employeeRegistrationCode));
+            user = (UserModel) employeeController.addDBRecord(userFactory);
         } else {
-            userFactory.setCommonAttrs(new CustomerModel().getType(), name, getNewID(CustomerController.GlobalIDFieldName), email, password);
-            user = userFactory.createModel();
-            customerController.addModelToDB(user);
+            userFactory.setType(new CustomerModel().getType());
+            user = (UserModel) customerController.addDBRecord(userFactory);
         }
         currentUser = user;
         return new AuthPackage(user, "");
@@ -52,10 +67,19 @@ public abstract class UserController extends DatabaseController {
         return new AuthPackage(user, "");
     }
 
+    public static void transitionToHomepage(ActionEvent event) {
+        if (currentUser==null) return;
+        currentUser.createController().transitionToHomeView(event);
+    }
+
     public static void logout(ActionEvent event) {
-        if (currentUser == null) return;
+        //we do not use Controller.transition() because it retains a reference to the user.
         try {
-            currentUser.createController().transition(ViewType.LOGIN, event);
+            Parent root = FXMLLoader.load(Objects.requireNonNull(UserController.class.getResource(ViewEnum.LOGIN.src)));
+            Scene scene = new Scene(root);
+
+            Stage stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
+            stage.setScene(scene);
             currentUser = null;
         }catch (Exception e) {
             e.printStackTrace();

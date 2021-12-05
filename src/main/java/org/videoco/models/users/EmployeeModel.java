@@ -1,30 +1,41 @@
 package org.videoco.models.users;
 
 import org.videoco.controllers.users.EmployeeController;
+import org.videoco.controllers.users.UserController;
+import org.videoco.controllers.users.UserType;
 
 public class EmployeeModel extends UserModel {
-    private String adminStatus;
+    private AdminStatus adminStatus;
     public EmployeeModel() {
-        this.type = "Employee";
+        this.type = UserType.EMPLOYEE;
     }
-    public EmployeeModel(String type, String name, String id, String email, String password) {
+    public EmployeeModel(UserType type, String name, String id, String email, String password) {
         super(name, id, email, password);
-        this.type = type;
+        if (type==UserType.CUSTOMER) {
+            new Exception("Wrong user type used to instantiate employee.").printStackTrace();
+            this.type = UserType.EMPLOYEE;
+        }else {
+            this.type = type;
+        }
+        this.adminStatus = AdminStatus.NON_ADMIN;
     }
 
-    public String getAdminStatus() {
+    public AdminStatus getAdminStatus() {
         return adminStatus;
     }
 
-    public void setAdminStatus(String status) {
-        this.adminStatus = status;
+    public void setAdminStatus(AdminStatus status) {
+        if (status==null) this.adminStatus = AdminStatus.NON_ADMIN;
+        else this.adminStatus = status;
     }
 
     @Override
-    public EmployeeController createController() {
+    public UserController createController() {
         //TODO switch statement to decide which controller to use
         EmployeeController controller = new EmployeeController();
         controller.setFocusModel(this);
+        controller.setUser(this);
         return controller;
     }
 }
+

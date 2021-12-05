@@ -1,21 +1,19 @@
 package org.videoco.models;
 
 import org.videoco.controllers.Controller;
-import org.videoco.controllers.MovieController;
-import org.videoco.utils.Utils;
+import org.videoco.controllers.movies.MovieController;
 
-public class MovieModel implements Model {
-    private String id;
+public class MovieModel extends Model {
     private String title;
     private String description;
     private String category;
     private String actors;
     private String directors;
     private String dateOfRelease;
-    private int amountInStock;
+    private String amountInStock;
     private String cardImage;
 
-    public MovieModel(String id, String title, String description, String category, int amountInStock) {
+    public MovieModel(String id, String title, String description, String category, String amountInStock) {
         this.setID(id);
         this.setTitle(title);
         this.setDescription(description);
@@ -23,16 +21,15 @@ public class MovieModel implements Model {
         this.setAmountInStock(amountInStock);
     }
 
-    public String getID() {
-        return id;
-    }
-
-    public void setID(String id) {
-        this.id = id;
-    }
-
     public String getTitle() {
         return title;
+    }
+
+    public String getBlurb() {
+        if (getDescription().length()>50) {
+            return getDescription().substring(0, 50) + "...";
+        }
+        return getDescription();
     }
 
     public void setTitle(String title) {
@@ -52,7 +49,8 @@ public class MovieModel implements Model {
     }
 
     public void setCategory(String category) {
-        this.category = category;
+        if (category==null) return;
+        this.category = category.strip().toUpperCase();
     }
 
     public String getActors() {
@@ -79,11 +77,11 @@ public class MovieModel implements Model {
         this.dateOfRelease = dateOfRelease;
     }
 
-    public int getAmountInStock() {
+    public String getAmountInStock() {
         return amountInStock;
     }
 
-    public void setAmountInStock(int amountInStock) {
+    public void setAmountInStock(String amountInStock) {
         this.amountInStock = amountInStock;
     }
 
@@ -95,13 +93,26 @@ public class MovieModel implements Model {
         this.cardImage = cardImage;
     }
 
+    public String getActorsFormated() {
+        if (this.actors==null) return "";
+        return String.join("; ", this.actors.split("-"));
+    }
+    public String getDirectorsFormated() {
+        if (this.directors==null) return "";
+        return String.join("; ", this.directors.split("-"));
+    }
+
     @Override
     public String getDatabaseKey() {
         return this.getID();
     }
 
+    public enum MovieCategory {
+        ACTION, COMEDY, DRAMA, ROMANCE, HORROR, ALL
+    }
+
     @Override
-    public Controller createController() {
-        return new MovieController();
+    public String toString() {
+        return String.format("%s (ID#%s)", this.getTitle(), this.getID());
     }
 }

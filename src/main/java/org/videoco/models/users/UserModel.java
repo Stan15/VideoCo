@@ -1,11 +1,12 @@
 package org.videoco.models.users;
 
+import org.videoco.controllers.users.UserController;
+import org.videoco.controllers.users.UserType;
 import org.videoco.models.Model;
 
-public abstract class UserModel implements Model {
+public abstract class UserModel extends Model {
     public String name;
-    public String id;
-    public String type;
+    public UserType type;
     public String email;
     public String password;
 
@@ -26,15 +27,8 @@ public abstract class UserModel implements Model {
     }
 
     public void setName(String name) {
+        if (name==null) return;
         this.name = String.join(" ", name.strip().toLowerCase().split("\s"));
-    }
-
-    public String getID() {
-        return id;
-    }
-
-    public void setID(String id) {
-        this.id = id;
     }
 
     public String getEmail() {
@@ -42,6 +36,7 @@ public abstract class UserModel implements Model {
     }
 
     public void setEmail(String email) {
+        if (email==null) return;
         this.email = email.strip().toLowerCase();
     }
 
@@ -53,7 +48,7 @@ public abstract class UserModel implements Model {
         this.password = password;
     }
 
-    public String getType() {
+    public UserType getType() {
         return this.type;
     }
 
@@ -66,4 +61,6 @@ public abstract class UserModel implements Model {
     public String toString() {
         return "User [name=" + name + ", id=" + id + ", email=" + email + ", password=" + password + "]";
     }
+
+    public abstract UserController createController();
 }

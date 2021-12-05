@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="504.0" prefWidth="429.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.videoco.views.movies.MovieDBEditPageVC">
+   <children>
+      <Label layoutX="30.0" layoutY="283.0" text="Actors" AnchorPane.leftAnchor="30.0">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Label>
+      <Label layoutX="30.0" layoutY="96.0" text="Date of release:" AnchorPane.leftAnchor="30.0">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Label>
+      <Label layoutX="30.0" layoutY="149.0" text="Description" AnchorPane.leftAnchor="30.0">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Label>
+      <TextArea fx:id="description" layoutX="30.0" layoutY="168.0" prefHeight="106.0" prefWidth="371.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" />
+      <Label layoutX="30.0" layoutY="334.0" text="Directors" AnchorPane.leftAnchor="30.0">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Label>
+      <ButtonBar layoutX="30.0" layoutY="384.0" prefHeight="40.0" prefWidth="372.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0">
+        <buttons>
+            <Button fx:id="updateRecordBttn" mnemonicParsing="false" onAction="#updateRecord" text="Update record" />
+            <Button fx:id="deleteRecordBttn" mnemonicParsing="false" onAction="#deleteRecord" text="Delete record" />
+            <Button fx:id="addRecordBttn" mnemonicParsing="false" onAction="#addRecord" text="Add record" />
+        </buttons>
+      </ButtonBar>
+      <TextField fx:id="actors" layoutX="30.0" layoutY="302.0" prefHeight="26.0" prefWidth="371.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" />
+      <TextField fx:id="directors" layoutX="30.0" layoutY="353.0" prefHeight="26.0" prefWidth="371.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" />
+      <ChoiceBox fx:id="category" layoutX="292.0" layoutY="115.0" prefHeight="26.0" prefWidth="114.0" AnchorPane.rightAnchor="31.0" />
+      <TextField fx:id="title" layoutX="31.0" layoutY="14.0" prefHeight="51.0" prefWidth="371.0" promptText="Movie title" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="20.0">
+         <font>
+            <Font name="System Bold" size="24.0" />
+         </font>
+      </TextField>
+      <DatePicker fx:id="dateOfRelease" layoutX="30.0" layoutY="115.0" prefHeight="26.0" prefWidth="125.0" AnchorPane.leftAnchor="30.0" />
+      <Label layoutX="30.0" layoutY="398.0" text="Amount in stock:" AnchorPane.leftAnchor="30.0" />
+      <TextField fx:id="amountInStock" layoutX="126.0" layoutY="394.0" prefHeight="26.0" prefWidth="45.0" AnchorPane.leftAnchor="126.0" />
+      <Label layoutX="284.0" layoutY="96.0" text="Category:">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

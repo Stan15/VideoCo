@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+
+
+<VBox fx:id="sidebar" prefHeight="326.0" prefWidth="78.0" styleClass="sidebar" stylesheets="@../../styles/main.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.videoco.views.sidebar.SidebarVC" />

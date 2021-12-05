@@ -1,18 +1,17 @@
 package org.videoco.models.users;
 
-import org.videoco.controllers.users.CustomerController;
+import org.videoco.controllers.users.UserType;
 
 public class CustomerModel extends UserModel {
+
     public String phoneNumber;
     public String loyaltyPoints;
     public String bankAccountNumber;
     public String shippingAddress;
     public String billingAddress;
-    public String placedOrderIDs;
-    public String receivedOrderIDs;
 
     public CustomerModel() {
-        this.type = "Customer";
+        this.type = UserType.CUSTOMER;
     }
     public CustomerModel(String name, String id, String email, String password) {
         super(name, id, email, password);
@@ -31,6 +30,7 @@ public class CustomerModel extends UserModel {
     }
 
     public void setLoyaltyPoints(String loyaltyPoints) {
+        if (loyaltyPoints==null||loyaltyPoints.isBlank()) loyaltyPoints = "0";
         this.loyaltyPoints = loyaltyPoints;
     }
 
@@ -58,27 +58,13 @@ public class CustomerModel extends UserModel {
         this.billingAddress = billingAddress;
     }
 
-    public String getPlacedOrderIDs() {
-        return placedOrderIDs;
-    }
-
-    public void setPlacedOrderIDs(String placedOrderIDs) {
-        this.placedOrderIDs = placedOrderIDs;
-    }
-
-    public String getReceivedOrderIDs() {
-        return receivedOrderIDs;
-    }
-
-    public void setReceivedOrderIDs(String receivedOrderIDs) {
-        this.receivedOrderIDs = receivedOrderIDs;
-    }
 
     @Override
-    public CustomerController createController() {
+    public org.videoco.controllers.users.UserController createController() {
         //TODO switch statement to decide which controller to use
-        CustomerController controller = new CustomerController();
+        org.videoco.controllers.users.CustomerController controller = new org.videoco.controllers.users.CustomerController();
         controller.setFocusModel(this);
+        controller.setUser(this);
         return controller;
     }
 }

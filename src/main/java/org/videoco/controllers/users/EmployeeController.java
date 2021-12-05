@@ -1,14 +1,24 @@
 package org.videoco.controllers.users;
 
 import javafx.event.ActionEvent;
+import org.videoco.controllers.database.MetadataFields;
+import org.videoco.controllers.movies.MovieController;
 import org.videoco.factories.Factory;
 import org.videoco.factories.UserFactory;
+import org.videoco.models.users.AdminStatus;
 import org.videoco.models.users.EmployeeModel;
 import org.videoco.models.Model;
 import org.videoco.utils.Utils;
-import org.videoco.views.ViewType;
+import org.videoco.utils.observer.Observer;
+import org.videoco.utils.observer.events.VCOEvent;
+import org.videoco.views.ViewEnum;
+import org.videoco.views.sidebar.info.SidebarInfoItem;
+import org.videoco.views.sidebar.switcher.SidebarSwitcherItem;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class EmployeeController extends UserController {
 
@@ -21,8 +31,22 @@ public class EmployeeController extends UserController {
     private static final HashMap<String, Model> cache = new HashMap<>();
     public static boolean isCached;
     public static String databasePath = Utils.getResourcePath("/org.videoco/databases/employees.csv");
-    public static String[] databaseHeader = new String[]{"id", "name", "email", "password", "type", "adminStatus"};
-    public static String GlobalIDFieldName = "GlobalEmployeeID";
+    public static String[] databaseHeader = new String[]{"id", "name", "email", "password", "type", "admin-status"};
+    @Override
+    public String getGlobalIDFieldName() {
+        return MetadataFields.GLOBAL_EMPLOYEE_ID.name();
+    }
+
+    @Override
+    public List<Model> getModels() {
+        try {
+            //only system admin can get a list of employees
+            if (((EmployeeModel) this.user).getAdminStatus().level>=AdminStatus.SYSTEM_ADMIN.level) {
+                return super.getModels();
+            }
+        }catch (ClassCastException ignored) {}
+        return new ArrayList<>();
+    }
 
     @Override
     public void readRecordIntoFactory(String[] record, Factory factory) throws Exception {
@@ -30,19 +54,19 @@ public class EmployeeController extends UserController {
         if (record.length!=databaseHeader.length) throw new Exception("Invalid record. Cannot create a user instance.");
         for (int i=0; i<record.length; i++) {
             switch (databaseHeader[i]) {
-                case "id": userFactory.setType(record[i].strip());
-                case "name": userFactory.setType(record[i].strip());
-                case "email": userFactory.setType(record[i].strip());
-                case "password": userFactory.setType(record[i].strip());
-                case "type": userFactory.setType(record[i].strip());
-                case "adminStatus": userFactory.setAdminStatus(record[i].strip());
+                case "id" -> userFactory.setID(record[i].strip());
+                case "name" -> userFactory.setName(record[i].strip());
+                case "email" -> userFactory.setEmail(record[i].strip());
+                case "password" -> userFactory.setPassword(record[i].strip());
+                case "type" -> userFactory.setType(record[i].strip());
+                case "admin-status" -> userFactory.setAdminStatus(record[i].strip());
             }
         }
     }
     @Override
     public String[] createRecord(Model model) {
         EmployeeModel user = (EmployeeModel) model;
-        return new String[]{user.getID(), user.getName(), user.getEmail(), user.getPassword(), user.getType(), user.getAdminStatus()};
+        return new String[]{user.getID(), user.getName(), user.getEmail(), user.getPassword(), user.getType().name(), user.getAdminStatus().name()};
     }
 
     @Override
@@ -55,12 +79,11 @@ public class EmployeeController extends UserController {
         return EmployeeController.databaseHeader;
     }
 
-
     @Override
     public HashMap<String, Model> getCache() {
         if (EmployeeController.isCached) return EmployeeController.cache;
         EmployeeController.isCached = true;
-        this.cacheDatabase();
+        this.cacheDatabase(new UserFactory());
         return EmployeeController.cache;
     }
 
@@ -73,11 +96,40 @@ public class EmployeeController extends UserController {
     @Override
     public void transitionToHomeView(ActionEvent event) {
         //TODO (or make EmployeeControlelr abstract and implement this for its concrete subclasses)
+        if (((EmployeeModel) this.user).getAdminStatus().level>=AdminStatus.ADMIN.level) {
+            transition(ViewEnum.MOVIE_DB_BROWSER, event);
+        } else {
+            transition(ViewEnum.MOVIE_BROWSER, event);
+        }
     }
 
     @Override
-    public boolean isValidTransition(ViewType view) {
+    public List<SidebarSwitcherItem> getSidebarSwitcherItems() {
+        List<SidebarSwitcherItem> switchers = new ArrayList<>();
+        MovieController movieController = new MovieController(this.user);
+        switchers.add(new SidebarSwitcherItem("Movies", ViewEnum.MOVIE_DB_BROWSER, movieController));
+        return switchers;
+    }
+
+    @Override
+    public List<SidebarInfoItem> getSidebarInfoItems() {
+        List<SidebarInfoItem> infoItems = new ArrayList<>();
+        if (((EmployeeModel) this.user).getAdminStatus().level>=AdminStatus.ADMIN.level) {
+            infoItems.add(new SidebarInfoItem(this, "Admin status", (model) -> ((EmployeeModel) model).getAdminStatus().name()));
+        }
+        return infoItems;
+    }
+
+    @Override
+    public boolean isValidTransition(ViewEnum view) {
         //TODO (or make EmployeeControlelr abstract and implement this for its concrete subclasses)
         return true;
+    }
+
+
+    private static final Map<VCOEvent, List<Observer<VCOEvent, Model>>> OBSERVERS = new HashMap<>();
+    @Override
+    public Map<VCOEvent, List<Observer<VCOEvent, Model>>> getObservers() {
+        return EmployeeController.OBSERVERS;
     }
 }

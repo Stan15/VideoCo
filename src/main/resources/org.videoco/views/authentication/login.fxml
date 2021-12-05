@@ -10,10 +10,10 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.videoco.views.authentication.LoginView">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.videoco.views.authentication.LoginVC">
    <children>
-      <PasswordField fx:id="password" layoutX="194.0" layoutY="194.0" prefHeight="26.0" prefWidth="210.0" promptText="Password" />
       <TextField fx:id="email" layoutX="195.0" layoutY="154.0" prefHeight="26.0" prefWidth="210.0" promptText="Email" />
+      <PasswordField fx:id="password" layoutX="194.0" layoutY="194.0" prefHeight="26.0" prefWidth="210.0" promptText="Password" />
       <Button layoutX="343.0" layoutY="255.0" mnemonicParsing="false" onAction="#loginUser" prefHeight="30.0" prefWidth="62.0" text="Login" />
       <Hyperlink layoutX="194.0" layoutY="258.0" onAction="#switchToRegisterScreen" text="Create account" />
       <Group fx:id="errorMsgGroup" layoutX="204.0" layoutY="229.0" styleClass="error-msg-hidden" stylesheets="@../../styles/main.css">

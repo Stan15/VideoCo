@@ -1,58 +1,99 @@
 package org.videoco.factories;
 
-import org.videoco.controllers.users.CustomerController;
+import org.videoco.controllers.users.EmployeeController;
+import org.videoco.controllers.users.UserType;
+import org.videoco.models.Model;
+import org.videoco.models.users.AdminStatus;
 import org.videoco.models.users.CustomerModel;
 import org.videoco.models.users.EmployeeModel;
 import org.videoco.models.users.UserModel;
 
-public class UserFactory implements Factory {
-    String name;
+public class UserFactory extends Factory {
     String id;
+    String name;
     String email;
     String password;
-    String type;
 
-    String adminStatus;
+    UserType type;
+    AdminStatus adminStatus;
 
     String phoneNumber;
-
     String bankAccountNumber;
     String loyaltyPoints;
     String shippingAddress;
     String billingAddress;
-    String placedOrderIDs;
-    String receivedOrderIDs;
 
-    public void setCommonAttrs(String type, String name, String id, String email, String password) {
-        this.type = type;
+    public UserFactory(){}
+    public UserFactory(UserModel user) {
+        super(user);
+    }
+
+    public void setCommonAttrs(String name, String email, String password) {
         this.name = name;
-        this.id = id;
         this.email = email;
         this.password = password;
     }
 
     @Override
+    public void copy(Model model) {
+        if (!(model instanceof UserModel m)) return;
+        this.setID(m.getID());
+        this.setName(m.getName());
+        this.setEmail(m.getEmail());
+        this.setPhoneNumber(m.getPassword());
+        if (m instanceof CustomerModel c) {
+            this.setPhoneNumber(c.getPhoneNumber());
+            this.setBankAccountNumber(c.getBankAccountNumber());
+            this.setLoyaltyPoints(c.getLoyaltyPoints());
+            this.setShippingAddress(c.getShippingAddress());
+            this.setBillingAddress(c.getBillingAddress());
+        } else if (m instanceof EmployeeModel e) {
+            this.setType(e.getType());
+            this.setAdminStatus(e.getAdminStatus());
+        }
+    }
+
+    @Override
     public UserModel createModel() {
+        if (this.findErrorInRequiredFields()!=null) return null;
         switch (type) {
-            case "Customer":
+            case CUSTOMER -> {
+                if (this.id==null || !this.id.matches("-?\\d+(\\.\\d+)?")) this.setID(new org.videoco.controllers.users.CustomerController().getNewID());
                 CustomerModel cmodel = new CustomerModel(name, id, email, password);
                 cmodel.setBillingAddress(this.billingAddress);
                 cmodel.setBankAccountNumber(this.bankAccountNumber);
                 cmodel.setLoyaltyPoints(this.loyaltyPoints);
-                cmodel.setPlacedOrderIDs(this.placedOrderIDs);
-                cmodel.setReceivedOrderIDs(this.receivedOrderIDs);
                 cmodel.setShippingAddress(this.shippingAddress);
                 cmodel.setPhoneNumber(this.phoneNumber);
                 return cmodel;
-            default:
+            } default -> {
+                if (this.id==null || !this.id.matches("-?\\d+(\\.\\d+)?")) this.setID(new EmployeeController().getNewID());
                 EmployeeModel emodel = new EmployeeModel(type, name, id, email, password);
                 emodel.setAdminStatus(this.adminStatus);
                 return emodel;
+            }
         }
     }
 
-    public void setType(String type) {
+    @Override
+    public String findErrorInRequiredFields() {
+        if (this.name==null || this.name.isBlank()) return "Missing name field";
+        if (this.email==null || this.email.isBlank()) return "Missing email field";
+        if (this.password==null || this.password.isBlank()) return "Missing password field";
+        return null;
+    }
+
+    @Override
+    public String getDatabaseKeyField() {
+        return this.email;
+    }
+
+    public void setType(UserType type) {
         this.type = type;
+    }
+
+    public void setType(String type) {
+        this.type = UserType.valueOf(type);
     }
 
     public void setID(String id) {
@@ -72,7 +113,11 @@ public class UserFactory implements Factory {
     }
 
     //-----------employees------------
+
     public void setAdminStatus(String status) {
+        if (status!=null) this.adminStatus = AdminStatus.valueOf(status);
+    }
+    public void setAdminStatus(AdminStatus status) {
         this.adminStatus = status;
     }
 
@@ -95,13 +140,5 @@ public class UserFactory implements Factory {
 
     public void setBillingAddress(String billingAddress) {
         this.billingAddress = billingAddress;
-    }
-
-    public void setPlacedOrderIDs(String placedOrderIDs) {
-        this.placedOrderIDs = placedOrderIDs;
-    }
-
-    public void setReceivedOrderIDs(String receivedOrderIDs) {
-        this.receivedOrderIDs = receivedOrderIDs;
     }
 }
