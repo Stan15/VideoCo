@@ -28,7 +28,7 @@ public class MovieDBEditPageVC extends ViewController implements Initializable {
 
     @FXML TextField title;
     @FXML DatePicker dateOfRelease;
-    @FXML ChoiceBox<String> category;
+    @FXML ChoiceBox<MovieModel.MovieCategory> category;
     @FXML TextArea description;
     @FXML TextField actors;
     @FXML TextField directors;
@@ -100,7 +100,7 @@ public class MovieDBEditPageVC extends ViewController implements Initializable {
         factory.setAmountInStock(amountInStock.getText());
     }
 
-    public void setupControls(MovieModel movie) {
+    public void setupFields(MovieModel movie) {
         title.setText(movie.getTitle());
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Objects.requireNonNull(MovieController.getMetadata(MetadataFields.DATE_FORMAT)));
         try {
@@ -137,13 +137,13 @@ public class MovieDBEditPageVC extends ViewController implements Initializable {
 
         for (MovieModel.MovieCategory cat : MovieModel.MovieCategory.values()) {
             if (cat!= MovieModel.MovieCategory.ALL)
-                category.getItems().add(cat.name());
+                category.getItems().add(cat);
         }
     }
     @Override
     public void setModel(Model model) {
         if (model==null) return;
         super.setModel(model);
-        setupControls((MovieModel) this.model);
+        setupFields((MovieModel) this.model);
     }
 }

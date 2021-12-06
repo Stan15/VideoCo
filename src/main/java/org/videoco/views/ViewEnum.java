@@ -11,7 +11,12 @@ public enum ViewEnum {
     LOGIN("/org.videoco/views/authentication/login.fxml"),
     REGISTER("/org.videoco/views/authentication/register.fxml"),
     SIDEBAR("/org.videoco/views/sidebar/sidebar.fxml"),
-    SIDEBAR_INFO_ITEM("/org.videoco/views/sidebar/sidebar-info-item.fxml");
+    SIDEBAR_INFO_ITEM("/org.videoco/views/sidebar/sidebar-info-item.fxml"),
+    EMPLOYEE_ID_GENERATOR("/org.videoco/views/users/employee-id-generator.fxml"),
+    EMPLOYEE_BROWSER("/org.videoco/views/users/employee-browser.fxml"),
+    CUSTOMER_BROWSER("/org.videoco/views/users/customer-browser.fxml"),
+    USER_PROFILE("/org.videoco/views/users/user-profile.fxml"),
+    PRIVILEGED_EMPLOYEE_PROFILE_EDITOR("/org.videoco/views/users/privileged-employee-profile-editor.fxml");
 
     public final String src;
     ViewEnum(String src) {

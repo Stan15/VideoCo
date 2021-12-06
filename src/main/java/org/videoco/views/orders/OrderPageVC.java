@@ -82,7 +82,7 @@ public class OrderPageVC extends ViewController implements Initializable {
     @FXML
     public void placeOrder(ActionEvent event) {
         OrderController orderController = new OrderController(this.user);
-        String error = orderController.placeOrder(false);
+        String error = orderController.placeOrder(true);
         if (error!=null)
             this.createAlert(Alert.AlertType.ERROR, error);
         else

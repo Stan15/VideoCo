@@ -1,8 +1,11 @@
-package org.videoco.controllers.users;
+package org.videoco.controllers.users.employee;
 
 import javafx.event.ActionEvent;
+import javafx.event.Event;
+import org.videoco.controllers.admin.SystemAdminController;
 import org.videoco.controllers.database.MetadataFields;
 import org.videoco.controllers.movies.MovieController;
+import org.videoco.controllers.users.UserController;
 import org.videoco.factories.Factory;
 import org.videoco.factories.UserFactory;
 import org.videoco.models.users.AdminStatus;
@@ -22,8 +25,11 @@ import java.util.Map;
 
 public class EmployeeController extends UserController {
 
-    public EmployeeController() {
+    public EmployeeController() {}
+    public EmployeeController(EmployeeModel user) {
+        this.setUser(user);
     }
+
 
 
 
@@ -39,12 +45,12 @@ public class EmployeeController extends UserController {
 
     @Override
     public List<Model> getModels() {
+        //only system admin can get a list of employees
         try {
-            //only system admin can get a list of employees
             if (((EmployeeModel) this.user).getAdminStatus().level>=AdminStatus.SYSTEM_ADMIN.level) {
                 return super.getModels();
             }
-        }catch (ClassCastException ignored) {}
+        }catch (Exception ignored) {}
         return new ArrayList<>();
     }
 
@@ -94,7 +100,7 @@ public class EmployeeController extends UserController {
     }
 
     @Override
-    public void transitionToHomeView(ActionEvent event) {
+    public void transitionToHomeView(Event event) {
         //TODO (or make EmployeeControlelr abstract and implement this for its concrete subclasses)
         if (((EmployeeModel) this.user).getAdminStatus().level>=AdminStatus.ADMIN.level) {
             transition(ViewEnum.MOVIE_DB_BROWSER, event);
@@ -107,7 +113,13 @@ public class EmployeeController extends UserController {
     public List<SidebarSwitcherItem> getSidebarSwitcherItems() {
         List<SidebarSwitcherItem> switchers = new ArrayList<>();
         MovieController movieController = new MovieController(this.user);
-        switchers.add(new SidebarSwitcherItem("Movies", ViewEnum.MOVIE_DB_BROWSER, movieController));
+        if (this.user instanceof EmployeeModel && ((EmployeeModel) this.user).getAdminStatus()==AdminStatus.SYSTEM_ADMIN) {
+            switchers.add(new SidebarSwitcherItem("Movies", ViewEnum.MOVIE_DB_BROWSER, movieController));
+            SystemAdminController sysAdminController = new SystemAdminController(this.user);
+            switchers.add(new SidebarSwitcherItem("Codes", ViewEnum.EMPLOYEE_ID_GENERATOR, sysAdminController));
+            switchers.add(new SidebarSwitcherItem("Customers", ViewEnum.CUSTOMER_BROWSER, sysAdminController));
+            switchers.add(new SidebarSwitcherItem("Employees", ViewEnum.EMPLOYEE_BROWSER, sysAdminController));
+        }
         return switchers;
     }
 

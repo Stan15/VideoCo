@@ -14,7 +14,7 @@ public class MovieQuerier extends DBQuerier<MovieModel> {
 
     @Override
     public boolean filterPredicate(MovieModel movie) {
-        MovieModel.MovieCategory cat = MovieModel.MovieCategory.valueOf(movie.getCategory());
+        MovieModel.MovieCategory cat = movie.getCategory();
         boolean filterOurOfStock = (Integer.parseInt(movie.getAmountInStock())>0 || ((MovieQuery) this.query).showOutOfStock);
         boolean filterCategory = (((MovieQuery) this.query).getCategory()== MovieModel.MovieCategory.ALL || cat == ((MovieQuery) this.query).getCategory());
         return super.filterPredicate(movie) && filterOurOfStock && filterCategory;

@@ -52,7 +52,7 @@ public class MovieController extends DatabaseController {
     @Override
     public String[] createRecord(Model model) {
         MovieModel movie = (MovieModel) model;
-        return new String[]{movie.getID(), movie.getTitle(), movie.getDescription(), movie.getCategory(), movie.getActors(), movie.getDirectors(), movie.getDateOfRelease(), movie.getAmountInStock()};
+        return new String[]{movie.getID(), movie.getTitle(), movie.getDescription(), movie.getCategory().name(), movie.getActors(), movie.getDirectors(), movie.getDateOfRelease(), movie.getAmountInStock()};
     }
 
 

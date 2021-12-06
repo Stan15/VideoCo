@@ -88,8 +88,12 @@ public class OrderController extends DatabaseController {
         OrderModel order = (OrderModel) this.updateRecord(draftOrder.getDatabaseKey(), new OrderFactory(draftOrder));
         MovieController controller = new MovieController(this.user);
         for (MovieModel movie : order.getMovies()) {
+            if (Integer.parseInt(movie.getAmountInStock())<=0) return "Movie \""+movie.getTitle()+"\" is out of stock";
+        }
+        for (MovieModel movie : order.getMovies()) {
             controller.decrementMovieStock(movie);
         }
+        if (useLoyaltyPoints) ((CustomerController) this.user.createController()).incrementLoyaltyPoints(loyaltyPointsPerOrder);
         this.focusModel = null;
         emit(OrderEvent.PLACED, order);
         return null;
@@ -107,6 +111,7 @@ public class OrderController extends DatabaseController {
         for (MovieModel movie : order.getMovies()) {
             controller.incrementMovieStock(movie);
         }
+        if (order.getPaidWithLoyaltyPoints()) ((CustomerController) this.user.createController()).decrementLoyaltyPoints(loyaltyPointsPerOrder);
         emit(OrderEvent.CANCELLED, order);
         return null;
     }

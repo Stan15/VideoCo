@@ -36,6 +36,7 @@ public class OrdersBrowserVC extends DatabaseBrowser<OrderModel> {
 
         super.initialize(location, resources);
 
+        orderStatusChoiceBox.getItems().removeAll();
         orderStatusChoiceBox.setValue("ALL");
         orderStatusChoiceBox.getItems().add("ALL");
         for (OrderStatus stat : OrderStatus.values()) {

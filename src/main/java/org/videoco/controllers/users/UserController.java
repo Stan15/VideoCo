@@ -1,6 +1,7 @@
 package org.videoco.controllers.users;
 
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -8,7 +9,10 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.videoco.controllers.admin.AdminController;
 import org.videoco.controllers.database.DatabaseController;
+import org.videoco.controllers.users.employee.EmployeeController;
 import org.videoco.factories.UserFactory;
+import org.videoco.models.Model;
+import org.videoco.models.users.AdminStatus;
 import org.videoco.models.users.CustomerModel;
 import org.videoco.models.users.EmployeeModel;
 import org.videoco.models.users.UserModel;
@@ -23,9 +27,17 @@ import java.util.Objects;
 public abstract class UserController extends DatabaseController {
     private static UserModel currentUser;
 
-    public abstract void transitionToHomeView(ActionEvent event);
+    public abstract void transitionToHomeView(Event event);
     public abstract List<SidebarSwitcherItem> getSidebarSwitcherItems();
     public abstract List<SidebarInfoItem> getSidebarInfoItems();
+
+    public static EmployeeModel getSystemAdminModel() {
+        for (Model user : new EmployeeController().getModels()) {
+            if (user instanceof EmployeeModel e && e.getAdminStatus()== AdminStatus.SYSTEM_ADMIN)
+                return ((EmployeeModel) user);
+        }
+        return null;
+    }
 
     public static AuthPackage registerUser(String name, String email, String password, String employeeRegistrationCode) {
         DatabaseController customerController = new CustomerController();
@@ -67,7 +79,7 @@ public abstract class UserController extends DatabaseController {
         return new AuthPackage(user, "");
     }
 
-    public static void transitionToHomepage(ActionEvent event) {
+    public static void transitionToHomepage(Event event) {
         if (currentUser==null) return;
         currentUser.createController().transitionToHomeView(event);
     }

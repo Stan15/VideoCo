@@ -8,7 +8,7 @@ public class MovieFactory extends Factory {
     public String id;
     public String title;
     public String description;
-    public String category;
+    public MovieModel.MovieCategory category;
     public String actors;
     public String directors;
     public String dateOfRelease;
@@ -25,7 +25,7 @@ public class MovieFactory extends Factory {
         this.setID(m.getID());
         this.setTitle(m.getTitle());
         this.setDescription(m.getDescription());
-        this.setCategory(m.getCategory());
+        this.setCategory(m.getCategory().name());
         this.setActors(m.getActors());
         this.setDirectors(m.getDirectors());
         this.setDateOfRelease(m.getDateOfRelease());
@@ -47,7 +47,7 @@ public class MovieFactory extends Factory {
     public String findErrorInRequiredFields() {
         if (this.title==null || this.title.isBlank()) return "Missing movie title.";
         if (this.description==null || this.description.isBlank()) return "Missing movie description.";
-        if (this.category==null || this.category.isBlank()) return "Missing movie category.";
+        if (this.category==null) return "Missing movie category.";
         try {
             Integer.parseInt(this.amountInStock);
         }catch (Exception e) {
@@ -85,11 +85,14 @@ public class MovieFactory extends Factory {
         this.description = description;
     }
 
-    public String getCategory() {
+    public MovieModel.MovieCategory getCategory() {
         return category;
     }
 
     public void setCategory(String category) {
+        this.category = MovieModel.MovieCategory.valueOf(category.strip().toUpperCase());
+    }
+    public void setCategory(MovieModel.MovieCategory category) {
         this.category = category;
     }
 

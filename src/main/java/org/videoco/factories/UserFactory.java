@@ -1,6 +1,6 @@
 package org.videoco.factories;
 
-import org.videoco.controllers.users.EmployeeController;
+import org.videoco.controllers.users.employee.EmployeeController;
 import org.videoco.controllers.users.UserType;
 import org.videoco.models.Model;
 import org.videoco.models.users.AdminStatus;

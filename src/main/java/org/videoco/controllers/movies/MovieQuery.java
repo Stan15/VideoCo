@@ -13,6 +13,7 @@ public class MovieQuery extends Query<MovieModel> {
 
     @Override
     public int matchScore(MovieModel movie) {
+        if (this.getCategory()!=movie.getCategory())
         if (this.getContent()==null || this.getContent().isBlank()) return 1;
         int score = 0;
         score += movie.getTitle().toLowerCase().contains(this.getContent().toLowerCase()) ? 5 : 0;

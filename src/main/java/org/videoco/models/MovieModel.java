@@ -6,14 +6,14 @@ import org.videoco.controllers.movies.MovieController;
 public class MovieModel extends Model {
     private String title;
     private String description;
-    private String category;
+    private MovieCategory category;
     private String actors;
     private String directors;
     private String dateOfRelease;
     private String amountInStock;
     private String cardImage;
 
-    public MovieModel(String id, String title, String description, String category, String amountInStock) {
+    public MovieModel(String id, String title, String description, MovieCategory category, String amountInStock) {
         this.setID(id);
         this.setTitle(title);
         this.setDescription(description);
@@ -44,13 +44,13 @@ public class MovieModel extends Model {
         this.description = description;
     }
 
-    public String getCategory() {
+    public MovieCategory getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(MovieCategory category) {
         if (category==null) return;
-        this.category = category.strip().toUpperCase();
+        this.category = category;
     }
 
     public String getActors() {

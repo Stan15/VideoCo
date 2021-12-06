@@ -40,7 +40,7 @@ public abstract class DatabaseBrowser<M extends Model> extends ViewController im
 
         ObservableList<M> displayedList = querier.getQueriedList();
         displayedList.addListener((ListChangeListener<Model>) c -> {
-            if (displayedList.isEmpty()) setError("No items found.");
+            if (displayedList.isEmpty()) setError("No items matched your search.");
             else clearError();
         });
         tableView.setItems(displayedList);

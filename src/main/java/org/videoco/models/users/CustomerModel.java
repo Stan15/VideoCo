@@ -15,6 +15,7 @@ public class CustomerModel extends UserModel {
     }
     public CustomerModel(String name, String id, String email, String password) {
         super(name, id, email, password);
+        this.type = UserType.CUSTOMER;
     }
 
     public String getPhoneNumber() {

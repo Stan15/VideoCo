@@ -5,8 +5,11 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import org.videoco.controllers.users.UserController;
 import org.videoco.views.ViewController;
+import org.videoco.views.ViewEnum;
 
 public class AppHeader extends ViewController {
     @FXML Hyperlink logoutLink;
@@ -14,13 +17,13 @@ public class AppHeader extends ViewController {
     @FXML ImageView accountIcon;
 
     @FXML
-    public void goToHomepage(ActionEvent event) {
+    public void goToHomepage(MouseEvent event) {
         UserController.transitionToHomepage(event);
     }
 
     @FXML
-    public void goToAccountPage(ActionEvent event) {
-
+    public void goToAccountPage(MouseEvent event) {
+        this.user.createController().createPopup(ViewEnum.USER_PROFILE, event);
     }
 
     @FXML

@@ -34,7 +34,7 @@ public class MoviePageVC extends ViewController {
 
         title.setText(movie.getTitle());
         dateOfRelease.setText(movie.getDateOfRelease());
-        category.setText(movie.getCategory());
+        category.setText(movie.getCategory().name());
         description.getChildren().add(new Text(movie.getDescription()));
         actors.getChildren().add(new Text(movie.getActors()));
         directors.getChildren().add(new Text(movie.getDirectors()));

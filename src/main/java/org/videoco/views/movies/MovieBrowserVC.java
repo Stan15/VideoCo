@@ -26,6 +26,7 @@ public class MovieBrowserVC extends DatabaseBrowser<MovieModel> {
     public void initialize(URL location, ResourceBundle resources) {
         super.initialize(location, resources);
 
+        categoryChoiceBox.getItems().removeIf((c) -> true);
         categoryChoiceBox.setValue(MovieModel.MovieCategory.ALL);
         for (MovieModel.MovieCategory cat : MovieModel.MovieCategory.values()) {
             categoryChoiceBox.getItems().add(cat);

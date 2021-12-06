@@ -1,6 +1,7 @@
 package org.videoco.controllers.users;
 
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import org.videoco.controllers.database.MetadataFields;
 import org.videoco.controllers.movies.MovieController;
 import org.videoco.controllers.orders.OrderController;
@@ -10,6 +11,7 @@ import org.videoco.models.users.AdminStatus;
 import org.videoco.models.Model;
 import org.videoco.models.users.CustomerModel;
 import org.videoco.models.users.EmployeeModel;
+import org.videoco.models.users.UserModel;
 import org.videoco.utils.Utils;
 import org.videoco.utils.observer.Observer;
 import org.videoco.utils.observer.events.VCOEvent;
@@ -22,11 +24,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CustomerController extends org.videoco.controllers.users.UserController {
+public class CustomerController extends UserController {
 
     public CustomerController() {}
-    public CustomerController(CustomerModel model) {
-        super();
+    public CustomerController(UserModel user) {
+        this.setUser(user);
     }
 
 
@@ -45,10 +47,10 @@ public class CustomerController extends org.videoco.controllers.users.UserContro
     public List<Model> getModels() {
         try {
             //only admins can get a list of customers
-            if (((EmployeeModel) this.user).getAdminStatus().level>= AdminStatus.ADMIN.level) {
+            if (((EmployeeModel) this.user).getAdminStatus().level>= AdminStatus.SYSTEM_ADMIN.level) {
                 return super.getModels();
             }
-        }catch (ClassCastException ignored) {}
+        }catch (Exception ignored) {}
         return new ArrayList<>();
     }
 
@@ -103,7 +105,7 @@ public class CustomerController extends org.videoco.controllers.users.UserContro
     }
 
     @Override
-    public void transitionToHomeView(ActionEvent event) {
+    public void transitionToHomeView(Event event) {
         transition(ViewEnum.MOVIE_BROWSER, event);
     }
 

@@ -86,8 +86,8 @@ public abstract class Controller {
 
             FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource(view.src)));
             Parent dialogView = loader.load();
-            dialogView = (Parent) viewModifier.modify(dialogView, loader);
             setupViewController(loader);
+            dialogView = (Parent) viewModifier.modify(dialogView, loader);
 
             Scene dialogScene = new Scene(dialogView);
             dialog.setScene(dialogScene);

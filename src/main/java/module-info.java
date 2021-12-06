@@ -14,4 +14,5 @@ module org.videoco {
     opens org.videoco.views.sidebar to javafx.fxml;
     opens org.videoco.views.sidebar.switcher to javafx.fxml;
     opens org.videoco.views.sidebar.info to javafx.fxml;
+    opens org.videoco.views.users to javafx.fxml;
 }

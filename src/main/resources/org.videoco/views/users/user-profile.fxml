@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="400.0" prefWidth="438.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.videoco.views.users.UserProfileVC">
+   <children>
+      <ButtonBar fx:id="buttonBar" layoutX="31.0" layoutY="346.0" prefHeight="40.0" prefWidth="372.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0">
+        <buttons>
+          <Button fx:id="viewOrdersBttn" mnemonicParsing="false" onAction="#viewOrders" prefHeight="26.0" text="View orders" />
+            <Button fx:id="deleteAccountBttn" mnemonicParsing="false" onAction="#deleteAccount" text="Delete account" />
+            <Button fx:id="updateAccountBttn" mnemonicParsing="false" onAction="#updateAccount" text="Update account" />
+        </buttons>
+      </ButtonBar>
+      <TextField fx:id="name" layoutX="30.0" layoutY="19.0" prefHeight="51.0" prefWidth="230.0" promptText="Your Name" AnchorPane.leftAnchor="30.0" AnchorPane.topAnchor="19.0">
+         <font>
+            <Font name="System Bold" size="24.0" />
+         </font>
+      </TextField>
+      <Label fx:id="id" alignment="CENTER_RIGHT" layoutX="325.0" layoutY="27.0" text="User ID" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="27.0">
+         <font>
+            <Font name="System Italic" size="24.0" />
+         </font>
+      </Label>
+      <Label layoutX="30.0" layoutY="104.0" text="Email" AnchorPane.leftAnchor="30.0">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <TextField fx:id="email" layoutX="30.0" layoutY="124.0" prefHeight="26.0" prefWidth="378.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" />
+      <Label layoutX="30.0" layoutY="167.0" text="Password" AnchorPane.leftAnchor="30.0">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <TextField fx:id="password" layoutX="30.0" layoutY="187.0" prefHeight="26.0" prefWidth="378.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" />
+   </children>
+</AnchorPane>

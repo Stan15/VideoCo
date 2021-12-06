@@ -1,6 +1,6 @@
 package org.videoco.models.users;
 
-import org.videoco.controllers.users.EmployeeController;
+import org.videoco.controllers.users.employee.EmployeeController;
 import org.videoco.controllers.users.UserController;
 import org.videoco.controllers.users.UserType;
 
