@@ -1,5 +1,6 @@
 package org.videoco.models.users;
 
+import org.videoco.controllers.users.CustomerController;
 import org.videoco.controllers.users.employee.EmployeeController;
 import org.videoco.controllers.users.UserController;
 import org.videoco.controllers.users.UserType;
@@ -33,8 +34,8 @@ public class EmployeeModel extends UserModel {
     public UserController createController() {
         //TODO switch statement to decide which controller to use
         EmployeeController controller = new EmployeeController();
-        controller.setFocusModel(this);
-        controller.setUser(this);
+        controller.setFocusModel(new EmployeeController().getModelFromDB(this.getDatabaseKey()));
+        controller.setUser((EmployeeModel) new EmployeeController().getModelFromDB(this.getDatabaseKey()));
         return controller;
     }
 }

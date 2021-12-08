@@ -41,6 +41,8 @@ public class UserFactory extends Factory {
         this.setName(m.getName());
         this.setEmail(m.getEmail());
         this.setPhoneNumber(m.getPassword());
+        this.setPassword(m.getPassword());
+        this.setType(m.getType());
         if (m instanceof CustomerModel c) {
             this.setPhoneNumber(c.getPhoneNumber());
             this.setBankAccountNumber(c.getBankAccountNumber());
@@ -48,7 +50,6 @@ public class UserFactory extends Factory {
             this.setShippingAddress(c.getShippingAddress());
             this.setBillingAddress(c.getBillingAddress());
         } else if (m instanceof EmployeeModel e) {
-            this.setType(e.getType());
             this.setAdminStatus(e.getAdminStatus());
         }
     }

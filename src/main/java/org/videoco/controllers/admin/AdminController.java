@@ -16,16 +16,6 @@ public class AdminController extends EmployeeController {
     protected static boolean areRegisterCodesCached = false;
 
     protected AdminController() {}
-    private AdminController(UserModel user) {
-        this.setUser(user);
-    }
-
-    public static AdminController getInstance(UserModel user) {
-        if (user instanceof EmployeeModel e) {
-            if (e.getAdminStatus().level>=AdminStatus.ADMIN.level) return new AdminController(user);
-        }
-        return null;
-    }
 
 
     protected static void cacheEmployeeRegisterCodes() {
@@ -54,7 +44,6 @@ public class AdminController extends EmployeeController {
             String type = code.split(":")[0];
             return UserType.valueOf(type);
         }catch (Exception e) {
-            e.printStackTrace();
             return null;
         }
     }

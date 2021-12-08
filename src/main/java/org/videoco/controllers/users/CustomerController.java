@@ -37,22 +37,12 @@ public class CustomerController extends UserController {
     private static final HashMap<String, Model> cache = new HashMap<>();
     private static boolean isCached = false;
     public static String databasePath = Utils.getResourcePath("/org.videoco/databases/customers.csv");
-    public static String[] databaseHeader = new String[]{"id", "name", "email", "password", "number", "loyalty-points", "bank-account-number", "shipping-address", "billing-address"};
+    public static String[] databaseHeader = new String[]{"id", "name", "email", "password", "number", "loyalty-points", "bank-account-number", "shipping-address", "billing-address", "type"};
     @Override
     public String getGlobalIDFieldName() {
         return MetadataFields.GLOBAL_CUSTOMER_ID.name();
     }
 
-    @Override
-    public List<Model> getModels() {
-        try {
-            //only admins can get a list of customers
-            if (((EmployeeModel) this.user).getAdminStatus().level>= AdminStatus.SYSTEM_ADMIN.level) {
-                return super.getModels();
-            }
-        }catch (Exception ignored) {}
-        return new ArrayList<>();
-    }
 
     @Override
     public void readRecordIntoFactory(String[] record, Factory factory) throws Exception {
@@ -69,13 +59,14 @@ public class CustomerController extends UserController {
                 case "bank-account-number" -> userFactory.setBankAccountNumber(record[i].strip());
                 case "shipping-address" -> userFactory.setShippingAddress(record[i].strip());
                 case "billing-address" -> userFactory.setBillingAddress(record[i].strip());
+                case "type" -> userFactory.setType(record[i].strip());
             }
         }
     }
     @Override
     public String[] createRecord(Model model) {
         CustomerModel user = (CustomerModel) model;
-        return new String[]{user.getID(), user.getName(), user.getEmail(), user.getPassword(), user.getPhoneNumber(), user.getLoyaltyPoints(), user.getBankAccountNumber(), user.getShippingAddress(), user.getBillingAddress()};
+        return new String[]{user.getID(), user.getName(), user.getEmail(), user.getPassword(), user.getPhoneNumber(), user.getLoyaltyPoints(), user.getBankAccountNumber(), user.getShippingAddress(), user.getBillingAddress(), user.getType().name()};
     }
 
     @Override

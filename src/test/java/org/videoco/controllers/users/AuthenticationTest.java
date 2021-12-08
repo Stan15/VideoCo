@@ -4,10 +4,13 @@ import com.opencsv.CSVWriter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.videoco.controllers.admin.AdminController;
 import org.videoco.controllers.admin.SystemAdminController;
 import org.videoco.controllers.database.DatabaseController;
+import org.videoco.controllers.orders.OrderController;
 import org.videoco.controllers.users.employee.EmployeeController;
 import org.videoco.factories.UserFactory;
+import org.videoco.models.users.CustomerModel;
 import org.videoco.models.users.EmployeeModel;
 import org.videoco.models.users.UserModel;
 import org.videoco.utils.Utils;
@@ -21,7 +24,7 @@ import java.util.regex.Pattern;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class AuthenticationTest {
-    SystemAdminController sysAdminController;
+    public static SystemAdminController sysAdminController;
     @BeforeAll
     static void pointToTestDatabases() {
         CustomerController.databasePath = Utils.getResourcePath("/org.videoco/databases/customers.csv");//.replaceAll("(?<=[/\\\\])databases(?=[/\\\\])", "test-databases");
@@ -41,22 +44,42 @@ public class AuthenticationTest {
         factory.setPassword("password");
         factory.setType("EMPLOYEE");
         factory.setAdminStatus("SYSTEM_ADMIN");
-        this.sysAdminController = new SystemAdminController((EmployeeModel) new EmployeeController().addDBRecord(factory));
+        EmployeeModel employee = (EmployeeModel) new EmployeeController().addDBRecord(factory);
+        sysAdminController = new SystemAdminController(employee);
     }
     public void resetDatabases() {
         try {
             CSVWriter writerCustomer = new CSVWriter(new FileWriter(CustomerController.databasePath, false));
             CSVWriter writerEmployee = new CSVWriter(new FileWriter(EmployeeController.databasePath, false));
-            CSVWriter writerMetadata = new CSVWriter(new FileWriter(DatabaseController.metadataPath, false));
             new CustomerController().clearCache();
             new EmployeeController().clearCache();
             writerCustomer.close();
             writerEmployee.close();
-            writerMetadata.close();
         }catch (Exception e) {
             e.printStackTrace();
             fail();
         }
+    }
+    @Test
+    public void testLogin() {
+        String name = "Stanley heio";
+        String email = "stantheio@mail.com";
+        String password = "password123";
+        UserController.AuthPackage authPackage = UserController.registerUser(name, email, password, "");
+
+        UserController.AuthPackage package2 = UserController.login(email, password);
+        assertEquals(package2.user.getDatabaseKey(), authPackage.user.getDatabaseKey());
+    }
+
+    @Test
+    public void testInvalidLogin() {
+        String name = "Stanley heio";
+        String email = "stantheio@mail.com";
+        String password = "password123";
+        UserController.AuthPackage authPackage = UserController.registerUser(name, email, password, "");
+
+        UserController.AuthPackage package2 = UserController.login(email+"hi", password);
+        assertNull(package2.getUserModel());
     }
 
     @Test
@@ -103,7 +126,8 @@ public class AuthenticationTest {
         String email = "stantheio@mail.com";
         String password = "password123";
         //TODO i have to create a systemadmin object so I can use the SystemAdminController
-        UserController.registerUser(name, email, password, this.sysAdminController.createEmployeeRegistrationCode(UserType.EMPLOYEE));
+        UserController.registerUser(name, email, password, sysAdminController.createEmployeeRegistrationCode(UserType.EMPLOYEE));
+        assertNull(UserController.registerUser(name, email, password, sysAdminController.createEmployeeRegistrationCode(UserType.EMPLOYEE)).user);
 
         String customerDatabase = Utils.readFileToString(CustomerController.databasePath);
         String employeeDatabase = Utils.readFileToString(EmployeeController.databasePath);

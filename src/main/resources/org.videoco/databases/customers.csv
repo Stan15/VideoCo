@@ -1,2 +1,2 @@
-"id","name","email","password","number","loyalty-points","bank-account-number","shipping-address","billing-address"
-"1","stan ihe","ihe@mail.com","password",,"0",,,
+"id","name","email","password","number","loyalty-points","bank-account-number","shipping-address","billing-address","type"
+"1","stan ihe","ihe@mail.com","password",,"0",,,"CUSTOMER"

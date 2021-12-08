@@ -18,14 +18,11 @@ import org.videoco.utils.observer.events.OrderEvent;
 import org.videoco.utils.observer.events.VCOEvent;
 import org.videoco.views.ViewEnum;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class OrderController extends DatabaseController {
     private List<OrderModel> userOrders = new ArrayList<>();
-    private static final int loyaltyPointsPerOrder = 1;
+    public static final int loyaltyPointsPerOrder = 1;
     public OrderController() {}
     public OrderController(UserModel user) {
         super();
@@ -85,6 +82,7 @@ public class OrderController extends DatabaseController {
         OrderModel draftOrder = this.getDraftOrder();
         if (draftOrder==null || draftOrder.getMovies().size()<=0) return "No movies added to order.";
         draftOrder.setStatus(OrderStatus.PLACED);
+        draftOrder.setDateOrdered(new Date());
         OrderModel order = (OrderModel) this.updateRecord(draftOrder.getDatabaseKey(), new OrderFactory(draftOrder));
         MovieController controller = new MovieController(this.user);
         for (MovieModel movie : order.getMovies()) {
@@ -93,8 +91,14 @@ public class OrderController extends DatabaseController {
         for (MovieModel movie : order.getMovies()) {
             controller.decrementMovieStock(movie);
         }
-        if (useLoyaltyPoints) ((CustomerController) this.user.createController()).incrementLoyaltyPoints(loyaltyPointsPerOrder);
+        if (useLoyaltyPoints) {
+            OrderFactory factory = new OrderFactory(order);
+            ((CustomerController) this.user.createController()).decrementLoyaltyPoints(loyaltyPointsPerOrder);
+            factory.setPaidWithLoyaltyPoints("true");
+            this.updateRecord(order.getDatabaseKey(), factory);
+        }
         this.focusModel = null;
+
         emit(OrderEvent.PLACED, order);
         return null;
     }
@@ -111,7 +115,7 @@ public class OrderController extends DatabaseController {
         for (MovieModel movie : order.getMovies()) {
             controller.incrementMovieStock(movie);
         }
-        if (order.getPaidWithLoyaltyPoints()) ((CustomerController) this.user.createController()).decrementLoyaltyPoints(loyaltyPointsPerOrder);
+        if (order.getPaidWithLoyaltyPoints()) ((CustomerController) this.user.createController()).incrementLoyaltyPoints(loyaltyPointsPerOrder);
         emit(OrderEvent.CANCELLED, order);
         return null;
     }

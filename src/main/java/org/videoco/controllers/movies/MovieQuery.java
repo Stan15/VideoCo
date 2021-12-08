@@ -7,7 +7,7 @@ import org.videoco.utils.database_queries.Query;
 public class MovieQuery extends Query<MovieModel> {
     MovieModel.MovieCategory category;
     boolean showOutOfStock;
-    MovieQuery(String content) {
+    public MovieQuery(String content) {
         this(content, MovieModel.MovieCategory.ALL);
     }
 

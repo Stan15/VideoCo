@@ -15,12 +15,6 @@ public class SystemAdminController extends AdminController {
     public SystemAdminController(UserModel user) {
         this.setUser(user);
     }
-    public static SystemAdminController getInstance(UserModel user) {
-        if (user instanceof EmployeeModel e) {
-            if (e.getAdminStatus().level>=AdminStatus.SYSTEM_ADMIN.level) return new SystemAdminController(user);
-        }
-        return null;
-    }
     public String createEmployeeRegistrationCode(UserType type) {
         if (((EmployeeModel)this.user).getAdminStatus().level < AdminStatus.SYSTEM_ADMIN.level) {
             new Exception("Unauthorized access.").printStackTrace();

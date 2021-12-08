@@ -43,16 +43,6 @@ public class EmployeeController extends UserController {
         return MetadataFields.GLOBAL_EMPLOYEE_ID.name();
     }
 
-    @Override
-    public List<Model> getModels() {
-        //only system admin can get a list of employees
-        try {
-            if (((EmployeeModel) this.user).getAdminStatus().level>=AdminStatus.SYSTEM_ADMIN.level) {
-                return super.getModels();
-            }
-        }catch (Exception ignored) {}
-        return new ArrayList<>();
-    }
 
     @Override
     public void readRecordIntoFactory(String[] record, Factory factory) throws Exception {

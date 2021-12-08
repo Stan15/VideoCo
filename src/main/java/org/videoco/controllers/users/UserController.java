@@ -31,13 +31,6 @@ public abstract class UserController extends DatabaseController {
     public abstract List<SidebarSwitcherItem> getSidebarSwitcherItems();
     public abstract List<SidebarInfoItem> getSidebarInfoItems();
 
-    public static EmployeeModel getSystemAdminModel() {
-        for (Model user : new EmployeeController().getModels()) {
-            if (user instanceof EmployeeModel e && e.getAdminStatus()== AdminStatus.SYSTEM_ADMIN)
-                return ((EmployeeModel) user);
-        }
-        return null;
-    }
 
     public static AuthPackage registerUser(String name, String email, String password, String employeeRegistrationCode) {
         DatabaseController customerController = new CustomerController();
